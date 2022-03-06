@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hou.crm.mapper.DicMapper">
+  <select id="findByTypeCode" parameterType="string" resultType="com.hou.crm.pojo.BaseDict">
+    SELECT dict_id,dict_item_name FROM base_dict where dict_type_code=#{value}
+  </select>
+</mapper>

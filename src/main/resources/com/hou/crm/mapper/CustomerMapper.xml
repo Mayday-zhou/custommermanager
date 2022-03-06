@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hou.crm.mapper.CustomerMapper">
+
+    <select id="findByDict" parameterType="com.hou.crm.pojo.QueryVo" resultType="com.hou.crm.pojo.Customer">
+        select c.cust_id as cust_id,c.cust_name as cust_name,b1.dict_item_name as cust_soure
+        ,b2.dict_item_name as cust_industry,b3.dict_item_name as cust_level,c.cust_phone as cust_phone,c.cust_mobile as cust_mobile
+        from customer c
+        inner join base_dict b1 on c.cust_source=b1.dict_id
+        inner join base_dict b2 on c.cust_industry=b2.dict_id
+        inner join base_dict b3 ON  c.cust_level=b3.dict_id
+            <include refid="customerWhere"/>
+            limit #{start},#{rows};
+    </select>
+    <select id="findCount" parameterType="com.hou.crm.pojo.QueryVo" resultType="int">
+        select count(*)
+        from customer c inner join base_dict b1 on c.cust_source=b1.dict_id
+        inner join base_dict b2 on c.cust_industry=b2.dict_id
+        inner join base_dict b3 ON  c.cust_level=b3.dict_id
+        <include refid="customerWhere"></include>
+    </select>
+    <sql id="customerWhere">
+        <where>
+            <if test="custName!=null and custName!=''">
+                and c.cust_name like '%${custName}%'
+            </if>
+            <if test="custSource!=null and custSource!=''">
+                and c.cust_source like #{custSource}
+            </if>
+            <if test="custIndustry!=null and custIndustry!=''">
+                and c.cust_industry like cust_industry
+            </if>
+            <if test="custLevel!=null and custLevel!=''">
+                and c.cust_level like custLevel
+            </if>
+        </where>
+    </sql>
+
+    <select id="getCustomerByid" parameterType="int" resultType="com.hou.crm.pojo.Customer">
+        select cust_id,cust_name,cust_user_id,cust_create_id,cust_source,cust_industry
+             ,cust_level,cust_linkman,cust_phone,cust_mobile,cust_zipcode,cust_address,cust_createtime
+             ,cust_createtime   from customer WHERE cust_id = #{id}
+    </select>
+
+    <update id="updateCustomer" parameterType="com.hou.crm.pojo.Customer">
+        UPDATE customer
+            <set>
+                <if  test="custName!=null and custName!=''">
+                    cust_name = #{cust_name}
+                </if>
+                <if  test="custSource!=null and custSource!=''">
+                    custSource = #{custSource}
+                </if>
+                <if  test="custIndustry!=null and custIndustry!=''">
+                    custIndustry = #{custIndustry}
+                </if>
+                <if  test="custLevel!=null and custLevel!=''">
+                    custLevel = #{custLevel}
+                </if>
+                <if  test="cust_linkman!=null and cust_linkman!=''">
+                    cust_linkman = #{cust_linkman}
+                </if>
+                <if  test="cust_phone!=null and cust_phone!=''">
+                    cust_phone = #{cust_phone}
+                </if>
+                <if  test="cust_mobile!=null and cust_mobile!=''">
+                    cust_mobile = #{cust_mobile}
+                </if>
+                <if  test="cust_zipcode!=null and cust_zipcode!=''">
+                    cust_zipcode = #{cust_zipcode}
+                </if>
+                <if  test="cust_address!=null and cust_address!=''">
+                    cust_address = #{cust_address}
+                </if>
+            </set>
+            where cust_id = #{cust_id};
+    </update>
+    <delete id="deleteCustomer" parameterType="int">
+        delete from customer where cust_id = #{cust_id};
+    </delete>
+</mapper>
